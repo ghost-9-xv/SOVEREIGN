@@ -139,3 +139,50 @@ class ExecutionContext:
 
         self.execution_trace.append(res)
         return res
+
+
+# =====================================================================
+# ADDITIONS: PRSE MULTI-PHASE ENGINEERING PIPELINE MODELS
+# =====================================================================
+
+class GoverningPhase(Enum):
+    UNDERSTAND = "UNDERSTAND"
+    RESEARCH = "RESEARCH"
+    DECOMPOSE = "DECOMPOSE"
+    SELECT_EXPERTISE = "SELECT_EXPERTISE"
+    PLAN = "PLAN"
+    EXECUTE = "EXECUTE"
+    OBSERVE = "OBSERVE"
+    CLASSIFY = "CLASSIFY"
+    ANALYZE_PATTERNS = "ANALYZE_PATTERNS"
+    EVALUATE = "EVALUATE"
+    DIAGNOSE = "DIAGNOSE"
+    REPAIR = "REPAIR"
+    RETEST = "RETEST"
+    VERIFY = "VERIFY"
+    RECORD = "RECORD"
+    LEARN = "LEARN"
+    IMPROVE = "IMPROVE"
+
+
+@dataclass
+class PhaseResult:
+    phase: GoverningPhase
+    success: bool
+    summary: str
+    artifacts: Dict[str, Any] = field(default_factory=dict)
+    timestamp: float = field(default_factory=time.time)
+
+
+@dataclass
+class EngineeringOptimizationModel:
+    """Conceptual optimization model heuristic: (Verified Value * Reliability * Adaptability) / (Total Cost + Residual Risk)."""
+    verified_value: float = 1.0
+    reliability: float = 1.0
+    adaptability: float = 1.0
+    total_cost: float = 1.0
+    residual_risk: float = 0.1
+
+    def calculate_score(self) -> float:
+        denom = max(0.001, self.total_cost + self.residual_risk)
+        return (self.verified_value * self.reliability * self.adaptability) / denom

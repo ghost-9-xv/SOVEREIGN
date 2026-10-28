@@ -3,7 +3,7 @@
 import pytest
 from sovereign.core import AcceptanceCriterion, ExecutionContext, Objective, TaskState, ToolContract, ToolExecutionResult
 from sovereign.evaluator import AgentExecutionEvaluator, CompletionVerdict, PolicyComplianceVerdict
-from sovereign.repair import FailureCategory, RecursiveRepairEngine
+from sovereign.repair import FailureCategory, RecursiveRepairEngine, EngineeringPipeline
 
 
 def test_part22_test5_completion_verification():
@@ -81,3 +81,27 @@ def test_recursive_repair_loop():
     assert report.completion_verdict == CompletionVerdict.SUCCESS
     assert obj.state == TaskState.ACCEPTED
     assert attempt_counter["count"] == 2
+
+
+def test_engineering_pipeline_execution():
+    """Verify EngineeringPipeline executes the full governing cycle and optimization heuristic."""
+    pipeline = EngineeringPipeline()
+    obj = Objective(
+        objective_id="obj_pipe",
+        title="Engineering Pipeline Test",
+        description="Verify governing lifecycle execution",
+        acceptance_criteria=[AcceptanceCriterion("c1", "Pipeline complete", mandatory=True)]
+    )
+    context = ExecutionContext(obj)
+
+    def mock_executor(o: Objective, ctx: ExecutionContext):
+        return {"c1": True}
+
+    def mock_repair(cat: FailureCategory, ctx: ExecutionContext):
+        pass
+
+    res = pipeline.execute_governing_cycle(obj, context, mock_executor, mock_repair)
+    assert res["completion_verdict"] == "SUCCESS"
+    assert res["compliance_verdict"] == "COMPLIANT"
+    assert res["optimization_score"] > 0
+    assert len(pipeline.phase_history) >= 10
