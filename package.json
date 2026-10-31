@@ -1,0 +1,38 @@
+{
+  "name": "sovereign",
+  "version": "0.1.0",
+  "description": "SOVEREIGN - AI Agent Augmentation Framework",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts"
+  },
+  "keywords": [
+    "ai-agent",
+    "augmentation",
+    "evaluation",
+    "recursive-evaluation",
+    "pattern-analysis",
+    "polymath"
+  ],
+  "author": "SOVEREIGN Project",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0",
+    "tsx": "^4.6.0",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0"
+  }
+}
