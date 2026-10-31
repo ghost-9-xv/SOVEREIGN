@@ -27,10 +27,15 @@ sovereign/
 │   ├── pattern-analysis.ts   # Pattern detection & trend analysis
 │   ├── memory.ts             # Persistent memory with provenance
 │   ├── outcome-graph.ts      # Decision traceability graph
+│   ├── prse/                 # Polymath Recursive Self-Evolution engine
+│   │   ├── types.ts          # PRSE type definitions
+│   │   ├── engine.ts         # Multi-phase PRSE orchestration
+│   │   └── index.ts          # PRSE exports
 │   └── index.ts              # Main entry point
 ├── tests/
 │   └── unit/
-│       └── core.test.ts      # Unit tests
+│       ├── core.test.ts      # Core unit tests
+│       └── prse.test.ts      # PRSE unit tests
 ├── package.json
 └── tsconfig.json
 ```
@@ -142,4 +147,4 @@ npm run test:watch # Watch mode
 
 ## License
 
-MIT
+Apache-2.0

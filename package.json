@@ -7,6 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "pretest": "npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src --ext .ts",
@@ -22,7 +23,7 @@
     "polymath"
   ],
   "author": "SOVEREIGN Project",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "zod": "^3.22.4"
   },

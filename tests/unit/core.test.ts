@@ -16,14 +16,14 @@ import {
   DEFAULT_RESOURCE_BUDGET,
   isTerminalState,
   isProgressState
-} from "@dist/index.js";
-import { ExecutionEngine, DefaultToolExecutor, InMemoryAuthorizationManager, DefaultEvidenceCollector } from "@dist/execution-engine.js";
-import { EvaluationEngine, createDefaultEvaluationPolicy } from "@dist/evaluation-engine.js";
-import { DecisionEngine, DeterministicProvider, createDefaultDecisionPolicy } from "@dist/decision-engine.js";
-import { PatternAnalysisEngine, createObservationFromTrace } from "@dist/pattern-analysis.js";
-import { MemorySystem } from "@dist/memory.js";
-import { OutcomeGraph } from "@dist/outcome-graph.js";
-import { Sovereign } from "@dist/index.js";
+} from "@/index.js";
+import { ExecutionEngine, DefaultToolExecutor, InMemoryAuthorizationManager, DefaultEvidenceCollector } from "@/execution-engine.js";
+import { EvaluationEngine, createDefaultEvaluationPolicy } from "@/evaluation-engine.js";
+import { DecisionEngine, DeterministicProvider, createDefaultDecisionPolicy } from "@/decision-engine.js";
+import { PatternAnalysisEngine, createObservationFromTrace } from "@/pattern-analysis.js";
+import { MemorySystem } from "@/memory.js";
+import { OutcomeGraph } from "@/outcome-graph.js";
+import { Sovereign } from "@/index.js";
 
 // Type tests
 describe("Core Types", () => {
