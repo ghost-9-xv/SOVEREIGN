@@ -142,4 +142,4 @@ npm run test:watch # Watch mode
 
 ## License
 
-MIT
+Apache-2.0 license
