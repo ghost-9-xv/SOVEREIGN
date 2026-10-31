@@ -1,145 +1,237 @@
 # SOVEREIGN
 
-**AI Agent Augmentation Framework** - An intelligent execution layer, recursive evaluation engine, and adaptive engineering system.
+SOVEREIGN is a TypeScript framework for building AI agent systems that can reason, evaluate, repair, and learn from execution traces. The repository contains the core execution model, structured judgment logic, pattern analysis, memory, outcome tracking, and a PRSE (Principled Recursive Systems Engineering) workflow engine.
 
-## Overview
+This project is a framework prototype and reference implementation rather than a packaged SaaS product. The code is organized as a library that can be embedded in a host application or used as a building block for experimentation.
 
-SOVEREIGN is an open-source framework that makes existing AI agents more capable by providing:
+## Repository status
 
-- **Adaptive Polymathic Intelligence** - Dynamically selects relevant expertise for each subtask
-- **Recursive Evaluation & Repair** - Evaluates outputs against explicit criteria, diagnoses failures, implements targeted fixes
-- **Pattern Analysis** - Detects meaningful patterns across execution traces and engineering failures
-- **JEV-Inspired Decision Engine** - Structured semantic judgments (CHOICE, SCORE, NOUL)
-- **Persistent Memory & Outcome Graph** - Evidence-linked representation of decisions and outcomes
-- **Controlled Self-Improvement** - Evidence-based workflow evolution with rollback capability
-- **Professional Software Engineering** - Built with security, testing, and maintainability as first-class concerns
+- Default branch: `MAIN`
+- Primary language: TypeScript
+- License: Apache 2.0
+- Current architecture: framework core + PRSE workflow engine + tests
 
-## Architecture
+## What is implemented
 
-```
-sovereign/
+The repository currently includes:
+
+- Task lifecycle and budget management
+- Execution engine with tool contracts and permission checks
+- Evaluation engine for requirement and criterion scoring
+- Structured decision engine with CHOICE, SCORE, and NOUL judgments
+- Pattern analysis over execution observations
+- Memory system with validation and conflict detection
+- Outcome graph for traceability and decision replay
+- PRSE phases for iterative engineering workflows
+
+## Repository layout
+
+```text
+SOVEREIGN/
+├── README.md
+├── demo.ts
+├── package.json
+├── tsconfig.json
+├── vitest.config.ts
+├── LICENSE
 ├── src/
-│   ├── types.ts              # Core type definitions
-│   ├── task-manager.ts       # Task lifecycle management
-│   ├── execution-engine.ts   # Tool execution with contracts & permissions
-│   ├── evaluation-engine.ts  # Recursive evaluation against criteria
-│   ├── decision-engine.ts    # JEV-inspired structured judgments
-│   ├── pattern-analysis.ts   # Pattern detection & trend analysis
-│   ├── memory.ts             # Persistent memory with provenance
-│   ├── outcome-graph.ts      # Decision traceability graph
-│   └── index.ts              # Main entry point
+│   ├── index.ts
+│   ├── types.ts
+│   ├── task-manager.ts
+│   ├── execution-engine.ts
+│   ├── evaluation-engine.ts
+│   ├── decision-engine.ts
+│   ├── pattern-analysis.ts
+│   ├── memory.ts
+│   ├── outcome-graph.ts
+│   └── prse/
+│       ├── engine.ts
+│       ├── index.ts
+│       └── types.ts
 ├── tests/
 │   └── unit/
-│       └── core.test.ts      # Unit tests
-├── package.json
-└── tsconfig.json
+│       ├── core.test.ts
+│       └── prse.test.ts
+└── .jules/
+    └── sentinel.md
 ```
 
-## Core Components
+## Core components
 
-### Task Manager
-Manages task lifecycle with explicit states:
-- REQUESTED → ANALYZED → PLANNED → IN_PROGRESS → EXECUTED → EVALUATING → VERIFIED/REPAIR_REQUIRED
+### TaskManager
+Manages task creation, state transitions, resource budgets, tool calls, and trace collection.
 
-### Execution Engine
-- Tool contracts with input/output schemas
-- Permission-based authorization
-- Evidence collection during execution
-- Resource budget enforcement
+### ExecutionEngine
+Runs tasks, enforces tool permissions, records evidence, and tracks execution traces.
 
-### Evaluation Engine
-- Independent evaluation against explicit criteria
-- Completion verdicts: SUCCESS, PARTIAL, FAILED, UNVERIFIED
-- Policy compliance: COMPLIANT, VIOLATION, UNVERIFIED
-- Execution quality scoring across 10 dimensions
+### EvaluationEngine
+Scores task execution against criteria and returns verdicts such as `SUCCESS`, `PARTIAL`, `FAILED`, and `UNVERIFIED`.
 
-### Decision Engine (JEV-Inspired)
-Three judgment types:
-- **CHOICE** - Categorical selection from explicit options
-- **SCORE** - Rubric-based evaluation (0-5 scale)
-- **NOUL** - Bounded truth judgment (supported/uncertain/unsupported)
+### DecisionEngine
+Creates structured judgments using deterministic providers and routing logic for automated or manual follow-up.
 
-### Pattern Analysis
-- Deterministic feature extraction
-- Candidate pattern discovery
-- Evidence evaluation with counterevidence
-- Longitudinal trend analysis
+### PatternAnalysisEngine
+Finds recurring failure, evaluation, and resource patterns from recorded observations.
 
-### Memory System
-9 memory categories with provenance tracking:
-- SEMANTIC, EPISODIC, PROCEDURAL, DECISION, EXPERIMENTAL, PREFERENCE, PROJECT, EXPERTISE, PATTERN
+### MemorySystem
+Stores short- and long-term memories by category, with validation and conflict detection.
 
-### Outcome Graph
-Evidence-linked relationships for decision replay and traceability.
+### OutcomeGraph
+Links objectives, requirements, artifacts, evidence, and decisions to support traceability.
+
+### PRSEEngine
+Provides a recursive engineering workflow across phases such as `UNDERSTAND`, `DECONSTRUCT`, `ARCHITECT`, `BUILD`, `EVALUATE`, `DIAGNOSE`, `IMPROVE`, `REPEAT`, `VALIDATE`, `RELEASE`, and `EVOLVE`.
 
 ## Installation
 
+From the repository root:
+
 ```bash
-cd sovereign
+cd SOVEREIGN
 npm install
 npm run build
 npm test
 ```
 
-## Quick Start
+If you only want to type-check without building:
 
-```typescript
-import { Sovereign, Requirement, RequirementType } from "sovereign";
+```bash
+npm run typecheck
+```
+
+## Quick start
+
+The simplest entry point is the `Sovereign` class exported from `src/index.ts`.
+
+```ts
+import { Sovereign } from "./src/index.js";
 
 const sovereign = new Sovereign({
-  initialPermissions: ["READ_FILE", "WRITE_FILE"]
+  initialPermissions: ["READ_FILE", "WRITE_FILE"],
+  resourceBudget: {
+    maxRepairIterations: 3,
+    timeBudgetMs: 60000,
+    toolCallLimit: 20
+  }
 });
 
-const requirements: Requirement[] = [
+const task = sovereign.taskManager.createTask("Build a utility module", [
   {
     id: "req-1",
     type: "MANDATORY",
-    description: "Create a TypeScript function",
-    acceptanceCriteria: ["Compiles without errors", "Passes tests"],
+    description: "Create a utility function",
+    acceptanceCriteria: ["Function is exported", "Input validation is explicit"],
     priority: 10,
     source: "user",
     dependencies: []
   }
-];
+]);
 
-const { task, trace, evaluation } = await sovereign.executeTask(
-  "Create a utility function for string validation",
-  requirements
-);
-
-console.log("Verdict:", evaluation.completionVerdict);
-console.log("Quality:", evaluation.executionQualityScores);
+const status = sovereign.getStatus();
+console.log(status.tasks.total);
 ```
 
-## Milestones
+### Registering a tool
 
-- ✅ **Milestone 1**: Discovery & Baseline - Core types, task management, execution engine
-- 🔄 **Milestone 2**: Verified Execution Core - Tool contracts, permission checks, evidence collection
-- 🔄 **Milestone 3**: Recursive Evaluation - Independent evaluation, failure classification, targeted repair
-- 🔄 **Milestone 4**: Adaptive Polymath - Expertise selection, principle research, evidence tracking
-- 🔄 **Milestone 5**: JEV Decision Engine - CHOICE/SCORE/NOUL judgments, provider adapters
-- 🔄 **Milestone 6**: Pattern Analysis - Observation records, pattern discovery, validation
-- 🔄 **Milestone 7**: Pattern-Driven Repair - Root cause hypotheses, corrective changes
-- 🔄 **Milestone 8**: Memory & Outcome Graph - Persistent memory, decision replay
-- 🔄 **Milestone 9**: Controlled Self-Improvement - Baseline comparisons, adoption controls
-- 🔄 **Milestone 10**: Interoperability - Stable interfaces, documentation, examples
+```ts
+const tool = {
+  name: "read_file",
+  description: "Read a file from disk",
+  acceptedInputs: {
+    type: "object",
+    properties: {
+      path: { type: "string" }
+    },
+    required: ["path"]
+  },
+  outputSchema: {
+    type: "object",
+    properties: {
+      content: { type: "string" }
+    }
+  },
+  permissions: ["READ_FILE"],
+  sideEffects: ["Reads data from disk"],
+  errors: [],
+  resourceLimits: {
+    maxExecutionTimeMs: 10000,
+    maxMemoryMb: 64,
+    maxRetries: 1,
+    maxConcurrentCalls: 1
+  },
+  validationRequirements: ["Verify path exists"],
+  applicableConstraints: []
+};
 
-## Principles
+sovereign.registerTool("read_file", tool, async ({ path }) => ({
+  content: `Contents of ${path}`
+}));
+```
 
-- **Outcome over output** - Tasks complete only when acceptance criteria are verified
-- **Evidence before confidence** - Ground conclusions in observable evidence
-- **Simplicity before ambition** - Minimal architecture that satisfies requirements
-- **Explicit uncertainty** - Return INSUFFICIENT_EVIDENCE when appropriate
-- **Bounded autonomy** - Explicit permissions, resource budgets, stopping conditions
-- **Honest reporting** - Never fabricate results or claim unverified completion
+## Example script
 
-## Testing
+The repository includes a demo script at `demo.ts` that illustrates the major framework capabilities:
+
+- task creation and state transitions
+- tool registration and execution
+- evidence collection
+- evaluation and verdict generation
+- structured judgment calls
+- pattern discovery
+- memory storage
+- outcome graph construction
+
+Run it with:
 
 ```bash
-npm test           # Run all tests
-npm run test:watch # Watch mode
+npx tsx demo.ts
 ```
+
+## Development notes
+
+### Testing
+
+```bash
+npm test
+```
+
+The test suite covers the core framework and the PRSE workflow modules.
+
+### TypeScript build
+
+```bash
+npm run build
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+## Architecture principles
+
+The implementation follows a few explicit design ideas:
+
+- Outcome over output: completion is decided by evidence and acceptance criteria.
+- Evidence before confidence: conclusions are tied to traceable observations.
+- Explicit uncertainty: unsupported assertions should be marked as uncertain instead of inferred.
+- Bounded autonomy: permissions, tool contracts, and execution budgets are explicit.
+- Traceability: decisions, requirements, artifacts, and evidence are linked in the outcome graph.
+
+## Known limitations
+
+This repository is best understood as a conceptual framework and engineering substrate rather than a finished production system. Some components intentionally use deterministic or simplified logic as placeholders for extension by a host application or model-backed provider.
+
+Examples of current design assumptions:
+
+- Decision providers are intentionally lightweight and deterministic by default.
+- Authorization is in-memory by default and is intended for local experimentation.
+- Tool execution contracts are explicit but the framework does not provide a server, scheduler, or cloud runtime by itself.
+- The project is designed to be composed with external tooling and model infrastructure.
 
 ## License
 
-Apache-2.0 license
+This project is licensed under the Apache License 2.0.
+
+See `LICENSE` for full license text.
