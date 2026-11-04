@@ -49,7 +49,7 @@ export class DecisionEngine {
 
     const judgment = await this.executeJudgment(contract);
     this.judgmentHistory.push(contract);
-
+    
     return judgment as ChoiceJudgment;
   }
 
@@ -70,7 +70,7 @@ export class DecisionEngine {
 
     const judgment = await this.executeJudgment(contract);
     this.judgmentHistory.push(contract);
-
+    
     return judgment as ScoreJudgment;
   }
 
@@ -89,7 +89,7 @@ export class DecisionEngine {
 
     const judgment = await this.executeJudgment(contract);
     this.judgmentHistory.push(contract);
-
+    
     return judgment as NoulJudgment;
   }
 
@@ -135,7 +135,7 @@ export class DecisionEngine {
 
   private fallbackJudgment(contract: DecisionContract, error: unknown): StructuredJudgment {
     const errorMsg = error instanceof Error ? error.message : String(error);
-
+    
     switch (contract.questionType) {
       case "CHOICE": {
         const choices = contract.allowedOutputs.allowedChoices as string[];
@@ -175,7 +175,7 @@ export class DecisionEngine {
 
   async routeDecision(judgment: StructuredJudgment): Promise<"AUTOMATE" | "VERIFY" | "REPAIR" | "ESCALATE" | "BLOCK" | "ABSTAIN"> {
     const { policy } = this.options;
-
+    
     switch (judgment.type) {
       case "CHOICE": {
         for (const rule of policy.escalationRules) {
@@ -183,20 +183,20 @@ export class DecisionEngine {
             return rule.action as "AUTOMATE" | "VERIFY" | "REPAIR" | "ESCALATE" | "BLOCK" | "ABSTAIN";
           }
         }
-
+        
         for (const rule of policy.automationRules) {
           if (rule.condition.includes(judgment.selectedChoice)) {
             return rule.action as "AUTOMATE" | "VERIFY" | "REPAIR" | "ESCALATE" | "BLOCK" | "ABSTAIN";
           }
         }
-
+        
         return judgment.confidence > 0.8 ? "AUTOMATE" : "VERIFY";
       }
-
+      
       case "SCORE": {
         const normalizedScore = judgment.score / judgment.maxScore;
         const threshold = policy.thresholds.scoreThreshold || 0.7;
-
+        
         if (normalizedScore >= threshold && (judgment as any).confidence > 0.7) {
           return "AUTOMATE";
         } else if (normalizedScore >= threshold * 0.7) {
@@ -205,7 +205,7 @@ export class DecisionEngine {
           return "REPAIR";
         }
       }
-
+      
       case "NOUL": {
         if (judgment.supported === true && judgment.confidence > 0.8) {
           return "AUTOMATE";
@@ -233,7 +233,7 @@ export class DeterministicProvider implements JudgmentProvider {
       case "CHOICE": {
         const choices = contract.allowedOutputs.allowedChoices as string[];
         const selectedChoice = choices.includes("NEEDS_REVIEW") ? "NEEDS_REVIEW" : choices[0];
-
+        
         return {
           type: "CHOICE",
           question: contract.question,
@@ -243,13 +243,13 @@ export class DeterministicProvider implements JudgmentProvider {
           reasoning: "Deterministic fallback judgment"
         };
       }
-
+      
       case "SCORE": {
         const maxScore = (contract.allowedOutputs.maxScore as number) || 5;
         const rubric = contract.rubric || [];
         const evidenceCount = contract.evidenceReferences.length;
         const score = Math.min(maxScore, Math.max(0, evidenceCount));
-
+        
         return {
           type: "SCORE",
           question: contract.question,
@@ -259,7 +259,7 @@ export class DeterministicProvider implements JudgmentProvider {
           reasoning: `Deterministic score based on ${evidenceCount} evidence references`
         };
       }
-
+      
       case "NOUL": {
         const proposition = contract.allowedOutputs.proposition as string;
         return {

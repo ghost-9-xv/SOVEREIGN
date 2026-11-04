@@ -186,7 +186,7 @@ export class OutcomeGraph {
 
     while (currentNodes.length > 0) {
       const nextNodes: string[] = [];
-
+      
       for (const nodeId of currentNodes) {
         if (visited.has(nodeId)) continue;
         visited.add(nodeId);
@@ -218,7 +218,7 @@ export class OutcomeGraph {
           }
         }
       }
-
+      
       currentNodes = nextNodes;
     }
 
@@ -234,7 +234,7 @@ export class OutcomeGraph {
 
     while (queue.length > 0) {
       const { path, currentId, depth } = queue.shift()!;
-
+      
       if (depth > maxDepth) continue;
       if (currentId === toId) {
         paths.push({ edges: path, length: path.length });

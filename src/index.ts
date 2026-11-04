@@ -4,7 +4,7 @@
  */
 
 // Core types - re-export types explicitly (excluding FailureCategory which is exported as value)
-export type {
+export type { 
   TaskState,
   RequirementType,
   Requirement,
@@ -53,8 +53,8 @@ export type {
 } from "./types.js";
 
 // Core values - export as values (these are not types)
-export {
-  FailureCategory,
+export { 
+  FailureCategory, 
   FAILURE_CATEGORIES,
   isTerminalState,
   isProgressState,
@@ -66,72 +66,72 @@ export { TaskManager } from "./task-manager.js";
 export type { Task } from "./task-manager.js";
 
 // Execution engine - explicit type exports
-export type {
+export type { 
   ExecutionEngineOptions,
-  ToolExecutor,
+  ToolExecutor, 
   AuthorizationManager,
   EvidenceCollector
 } from "./execution-engine.js";
-export {
-  ExecutionEngine,
+export { 
+  ExecutionEngine, 
   DefaultToolExecutor,
   InMemoryAuthorizationManager,
   DefaultEvidenceCollector
 } from "./execution-engine.js";
 
 // Evaluation engine - explicit type exports
-export type {
-  EvaluationPolicy,
+export type { 
+  EvaluationPolicy, 
   EvaluationCriterion,
   CriterionResult
 } from "./evaluation-engine.js";
-export {
-  EvaluationEngine,
+export { 
+  EvaluationEngine, 
   createDefaultEvaluationPolicy
 } from "./evaluation-engine.js";
 
 // Decision engine - explicit type exports
-export type {
+export type { 
   DecisionEngineOptions,
   JudgmentProvider
 } from "./decision-engine.js";
-export {
-  DecisionEngine,
+export { 
+  DecisionEngine, 
   DeterministicProvider,
   createDefaultDecisionPolicy
 } from "./decision-engine.js";
 
 // Pattern analysis - explicit type exports
-export type {
+export type { 
   PatternAnalysisOptions,
   Observation,
   TrendAnalysis
 } from "./pattern-analysis.js";
-export {
-  PatternAnalysisEngine,
+export { 
+  PatternAnalysisEngine, 
   createObservationFromTrace
 } from "./pattern-analysis.js";
 
 // Memory system - explicit type exports
-export type {
+export type { 
   MemoryOptions,
   ConflictReport,
   CompoundedKnowledge,
   MemoryStats
 } from "./memory.js";
-export {
-  MemorySystem
+export { 
+  MemorySystem 
 } from "./memory.js";
 
 // Outcome graph - explicit type exports
-export type {
+export type { 
   OutcomeGraphOptions,
   DecisionPath,
   GraphPath,
   GraphStats
 } from "./outcome-graph.js";
-export {
-  OutcomeGraph
+export { 
+  OutcomeGraph 
 } from "./outcome-graph.js";
 
 // PRSE - Principle of Recursive Systems Engineering
@@ -205,7 +205,7 @@ export class Sovereign {
   public readonly outcomeGraph: OutcomeGraph;
 
   constructor(config: SovereignConfig = {}) {
-    this.taskManager = new TaskManager({
+    this.taskManager = new TaskManager({ 
       defaultBudget: mergeBudget(DEFAULT_RESOURCE_BUDGET, config.resourceBudget || {})
     });
 
@@ -221,7 +221,7 @@ export class Sovereign {
     });
 
     this.evaluationEngine = new EvaluationEngine(createDefaultEvaluationPolicy());
-
+    
     const decisionProvider = new DeterministicProvider();
     this.decisionEngine = new DecisionEngine({
       providers: new Map([["deterministic", decisionProvider]]),
@@ -243,18 +243,18 @@ export class Sovereign {
 
   async executeTask(objective: string, requirements: any[] = []): Promise<any> {
     const task = this.taskManager.createTask(objective, requirements);
-
+    
     const objectiveNode = this.outcomeGraph.createNode("OBJECTIVE", objective, { taskId: task.id });
-
+    
     for (const req of requirements) {
       const reqNode = this.outcomeGraph.createNode("REQUIREMENT", req.description, req);
       this.outcomeGraph.linkObjectiveToRequirement(objectiveNode.id, reqNode.id);
     }
 
     const trace = await this.executionEngine.executeTask(task);
-
+    
     const evaluation = this.evaluationEngine.evaluate(trace, requirements);
-
+    
     this.memory.store({
       category: "EPISODIC",
       content: `Task executed: ${objective}`,

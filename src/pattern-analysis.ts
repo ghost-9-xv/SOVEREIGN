@@ -156,7 +156,7 @@ export class PatternAnalysisEngine {
       if (obsList.length >= this.options.minOccurrences) {
         const firstObserved = obsList[0].timestamp;
         const lastObserved = obsList[obsList.length - 1].timestamp;
-
+        
         patterns.push({
           id: `pattern-failure-${category}-${Date.now()}`,
           name: `Recurring ${category} Failures`,
@@ -194,11 +194,11 @@ export class PatternAnalysisEngine {
   private findEvaluationPatterns(observations: Observation[]): PatternRecord[] {
     const patterns: PatternRecord[] = [];
     const failedEvaluations = observations.filter(o => o.data.verdict === "FAILED" || o.data.verdict === "UNVERIFIED");
-
+    
     if (failedEvaluations.length >= this.options.minOccurrences) {
       const firstObserved = failedEvaluations[0].timestamp;
       const lastObserved = failedEvaluations[failedEvaluations.length - 1].timestamp;
-
+      
       patterns.push({
         id: `pattern-eval-failures-${Date.now()}`,
         name: "Recurring Evaluation Failures",
@@ -230,15 +230,15 @@ export class PatternAnalysisEngine {
 
   private findResourcePatterns(observations: Observation[]): PatternRecord[] {
     const patterns: PatternRecord[] = [];
-    const highUsage = observations.filter(o =>
-      (o.data.toolCallCount as number) > 40 ||
+    const highUsage = observations.filter(o => 
+      (o.data.toolCallCount as number) > 40 || 
       (o.data.executionTime as number) > 240000
     );
-
+    
     if (highUsage.length >= this.options.minOccurrences) {
       const firstObserved = highUsage[0].timestamp;
       const lastObserved = highUsage[highUsage.length - 1].timestamp;
-
+      
       patterns.push({
         id: `pattern-resource-exhaustion-${Date.now()}`,
         name: "Recurring Resource Exhaustion",
@@ -308,7 +308,7 @@ export class PatternAnalysisEngine {
     }
 
     const validated = confidence >= 0.6 && pattern.occurrenceCount >= this.options.minOccurrences;
-
+    
     if (validated) {
       pattern.status = "VALIDATED";
     } else if (confidence < 0.3) {
@@ -316,7 +316,7 @@ export class PatternAnalysisEngine {
     }
 
     pattern.confidence = confidence;
-
+    
     return { validated, confidence, notes };
   }
 
@@ -339,7 +339,7 @@ export class PatternAnalysisEngine {
     for (const windowDays of windows) {
       const windowStart = new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
       const windowObservations = this.observations.filter(o => o.timestamp >= windowStart);
-
+      
       const failures = windowObservations.filter(o => o.type === "FAILURE");
       const byCategory = new Map<string, number>();
       for (const f of failures) {
@@ -420,7 +420,7 @@ export function createObservationFromTrace(trace: ExecutionTrace): Observation[]
   for (const [key, value] of Object.entries(trace.resourceUsage)) {
     resourceData[key] = value;
   }
-
+  
   observations.push({
     id: `obs-resource-${trace.taskId}`,
     taskId: trace.taskId,

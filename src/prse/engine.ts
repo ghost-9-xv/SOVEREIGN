@@ -604,8 +604,8 @@ export class PRSEEngine {
   }
 
   private evaluateSimplestDesign(ctx: PRSEContext): CriterionEvaluation {
-    const simplicityDecisions = ctx.assumptions.filter(a =>
-      a.statement.toLowerCase().includes("simple") ||
+    const simplicityDecisions = ctx.assumptions.filter(a => 
+      a.statement.toLowerCase().includes("simple") || 
       a.statement.toLowerCase().includes("minimal") ||
       a.statement.toLowerCase().includes("yagni")
     );
@@ -662,7 +662,7 @@ export class PRSEEngine {
 
   private evaluateAllDimensions(ctx: PRSEContext): CriterionEvaluation {
     const requiredDimensions = ["CORRECTNESS", "COMPLETENESS", "RELIABILITY", "SECURITY"];
-    const evaluatedDimensions = requiredDimensions.filter(dim =>
+    const evaluatedDimensions = requiredDimensions.filter(dim => 
       ctx.evidence.some(e => e.tags.includes(dim.toLowerCase()))
     );
     return {
@@ -686,8 +686,8 @@ export class PRSEEngine {
   }
 
   private evaluateNoUnverifiedClaims(ctx: PRSEContext): CriterionEvaluation {
-    const unverifiedClaims = ctx.evidence.filter(e =>
-      (e.type === "MODEL_JUDGMENT" || e.type === "HYPOTHESIS") &&
+    const unverifiedClaims = ctx.evidence.filter(e => 
+      (e.type === "MODEL_JUDGMENT" || e.type === "HYPOTHESIS") && 
       e.confidence < 0.5 &&
       !e.tags.includes("unverified")
     );
@@ -981,7 +981,7 @@ export class PRSEEngine {
 
     this.currentContext.currentPhase = phase;
     this.iterationCounter++;
-
+    
     const iteration: any = {
       id: `iter-${Date.now()}-${this.iterationCounter}`,
       iterationNumber: this.iterationCounter,
@@ -997,7 +997,7 @@ export class PRSEEngine {
     };
 
     const output = await this.executePhaseLogic(phase, iteration);
-
+    
     iteration.outputs = { ...output, evidence: output.evidence };
     iteration.evaluations = await this.evaluatePhase(phase);
     iteration.completedAt = new Date();
@@ -1006,7 +1006,7 @@ export class PRSEEngine {
 
     this.currentContext.iterationHistory.push(iteration);
     this.currentContext.evidence.push(...output.evidence);
-
+    
     if (output.artifacts.length > 0) {
       for (const artifact of output.artifacts) {
         this.patternAnalysis.addObservation({
@@ -1064,7 +1064,7 @@ export class PRSEEngine {
 
   private async evaluatePhase(phase: PRSEPhase): Promise<CriterionEvaluation[]> {
     if (!this.currentContext) return [];
-
+    
     const criteria = this.phaseCriteria.get(phase) || [];
     const evaluations: CriterionEvaluation[] = [];
 
@@ -1105,7 +1105,7 @@ export class PRSEEngine {
 
     if (this.iterationCounter >= 3) {
       const recentIterations = this.currentContext.iterationHistory.slice(-3);
-      const noProgress = recentIterations.every(iter =>
+      const noProgress = recentIterations.every(iter => 
         iter.issuesFound.length === 0 && iter.correctionsApplied.length === 0
       );
       if (noProgress) {
@@ -1119,18 +1119,18 @@ export class PRSEEngine {
 
   getIterationSummary(): any | null {
     if (!this.currentContext || this.currentContext.iterationHistory.length === 0) return null;
-
+    
     const currentIteration = this.currentContext.iterationHistory[this.currentContext.iterationHistory.length - 1];
     const previousIteration = this.currentContext.iterationHistory[this.currentContext.iterationHistory.length - 2];
-
+    
     return {
       iterationId: currentIteration.id,
       outcome: this.determineIterationOutcome(currentIteration, previousIteration),
       progressMetrics: {
         issuesResolved: previousIteration ? previousIteration.issuesFound.length - currentIteration.issuesFound.length : 0,
         criteriaImproved: currentIteration.evaluations.filter(e => e.satisfied).length,
-        criteriaRegressed: previousIteration ?
-          previousIteration.evaluations.filter(e => !e.satisfied).length -
+        criteriaRegressed: previousIteration ? 
+          previousIteration.evaluations.filter(e => !e.satisfied).length - 
           currentIteration.evaluations.filter(e => !e.satisfied).length : 0
       },
       issuesResolved: previousIteration ? Math.max(0, previousIteration.issuesFound.length - currentIteration.issuesFound.length) : 0,
@@ -1188,7 +1188,7 @@ export class PRSEEngine {
 **Corrections Applied:** ${latestIteration?.correctionsApplied.length || 0}
 
 ## Phase Evaluations
-${this.currentContext.iterationHistory.map(iter =>
+${this.currentContext.iterationHistory.map(iter => 
   `- **${iter.phase}** (Iter ${iter.iterationNumber}): ${iter.evaluations.length} criteria, ${iter.evaluations.filter(e => e.satisfied).length} passed`
 ).join("\n")}
 

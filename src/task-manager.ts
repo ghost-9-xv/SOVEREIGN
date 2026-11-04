@@ -81,7 +81,7 @@ export class TaskManager {
   createTask(objective: string, requirements: Requirement[] = [], parentTaskId?: string): Task {
     const id = `task-${Date.now()}-${++this.taskCounter}`;
     const now = new Date();
-
+    
     const task: Task = {
       id,
       objective,
@@ -143,7 +143,7 @@ export class TaskManager {
 
   private isValidTransition(from: TaskState, to: TaskState): boolean {
     if (isTerminalState(from)) return false;
-
+    
     const validTransitions: Record<TaskState, TaskState[]> = {
       REQUESTED: ["ANALYZED", "BLOCKED", "FAILED"],
       ANALYZED: ["PLANNED", "BLOCKED", "FAILED"],
@@ -255,7 +255,7 @@ export class TaskManager {
     task.trace!.endTime = new Date();
     task.trace!.state = success ? "VERIFIED" : "FAILED";
     task.updatedAt = new Date();
-
+    
     this.transitionState(taskId, success ? "VERIFIED" : "FAILED");
     return true;
   }

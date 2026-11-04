@@ -3,9 +3,9 @@
  * Demonstrates core capabilities of the framework
  */
 
-import {
-  Sovereign,
-  Requirement,
+import { 
+  Sovereign, 
+  Requirement, 
   RequirementType,
   TaskState,
   Evidence,
@@ -187,7 +187,7 @@ async function runDemo() {
 
   // Demonstrate decision engine
   console.log("\n6. Making structured judgments (JEV-inspired)...");
-
+  
   // CHOICE judgment
   const choice = await sovereign.decisionEngine.makeChoiceJudgment(
     "Task completion evaluation",

@@ -68,7 +68,7 @@ export class EvaluationEngine {
         verifiedCriteria.push(criterion.id);
       } else {
         failedCriteria.push(criterion.id);
-
+        
         if (criterion.mandatory) {
           missingEvidence.push(`Mandatory criterion not satisfied: ${criterion.name}`);
         }
@@ -76,7 +76,7 @@ export class EvaluationEngine {
 
       const supporting = result.evidence.filter(e => e.type === "VERIFIED_RESULT" || e.type === "OBSERVED_FACT");
       const contradicting = result.evidence.filter(e => e.type === "EXTERNAL_CLAIM" && e.confidence < 0.5);
-
+      
       if (supporting.length > 0 && contradicting.length > 0) {
         contradictoryEvidence.push(`Conflicting evidence for ${criterion.name}`);
       }
@@ -154,7 +154,7 @@ export class EvaluationEngine {
 
   private scoreEvidenceQuality(): number {
     if (this.evidence.length === 0) return 0;
-    const verifiedCount = this.evidence.filter(e =>
+    const verifiedCount = this.evidence.filter(e => 
       e.type === "VERIFIED_RESULT" || e.type === "OBSERVED_FACT"
     ).length;
     return verifiedCount / this.evidence.length;
@@ -167,8 +167,8 @@ export class EvaluationEngine {
   }
 
   private scoreRobustness(trace: ExecutionTrace): number {
-    const errorRate = trace.toolCalls.length > 0
-      ? trace.errors.length / trace.toolCalls.length
+    const errorRate = trace.toolCalls.length > 0 
+      ? trace.errors.length / trace.toolCalls.length 
       : 0;
     return Math.max(0, 1.0 - errorRate * 2);
   }
@@ -203,22 +203,22 @@ export class EvaluationEngine {
   ): CompletionVerdict {
     const mandatoryCriteria = this.policy.criteria.filter(c => c.mandatory);
     const mandatoryResults = mandatoryCriteria.map(c => criterionResults.get(c.id)!).filter(Boolean);
-
+    
     const allMandatorySatisfied = mandatoryResults.every(r => r && r.satisfied);
     const anyMandatoryFailed = mandatoryResults.some(r => r && !r.satisfied);
-
+    
     if (trace.state === "FAILED") return "FAILED";
-
+    
     if (allMandatorySatisfied && mandatoryResults.length > 0) {
       const optionalCriteria = this.policy.criteria.filter(c => !c.mandatory);
       const optionalResults = optionalCriteria.map(c => criterionResults.get(c.id)!).filter(Boolean);
       const allOptionalSatisfied = optionalResults.every(r => r && r.satisfied);
-
+      
       return allOptionalSatisfied ? "SUCCESS" : "PARTIAL";
     }
-
+    
     if (anyMandatoryFailed) return "FAILED";
-
+    
     return "UNVERIFIED";
   }
 
@@ -228,13 +228,13 @@ export class EvaluationEngine {
   ): PolicyComplianceVerdict {
     const securityViolations = trace.errors.filter(e => e.category === "SECURITY_VIOLATION");
     if (securityViolations.length > 0) return "VIOLATION";
-
+    
     const mandatoryCriteria = this.policy.criteria.filter(c => c.mandatory);
     const mandatoryResults = mandatoryCriteria.map(c => criterionResults.get(c.id)!).filter(Boolean);
     const allMandatorySatisfied = mandatoryResults.every(r => r && r.satisfied);
-
+    
     if (!allMandatorySatisfied) return "VIOLATION";
-
+    
     return "COMPLIANT";
   }
 }
@@ -309,8 +309,8 @@ export function createDefaultEvaluationPolicy(): EvaluationPolicy {
             satisfied: securityViolations.length === 0,
             score: securityViolations.length === 0 ? 1.0 : 0,
             evidence: [],
-            reasoning: securityViolations.length > 0
-              ? `${securityViolations.length} security violations`
+            reasoning: securityViolations.length > 0 
+              ? `${securityViolations.length} security violations` 
               : "No security violations"
           };
         }

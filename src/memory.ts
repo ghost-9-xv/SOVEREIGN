@@ -27,7 +27,7 @@ export class MemorySystem {
     };
 
     const categories: string[] = [
-      "SEMANTIC", "EPISODIC", "PROCEDURAL", "DECISION",
+      "SEMANTIC", "EPISODIC", "PROCEDURAL", "DECISION", 
       "EXPERIMENTAL", "PREFERENCE", "PROJECT", "EXPERTISE", "PATTERN"
     ];
     for (const category of categories) {
@@ -155,8 +155,8 @@ export class MemorySystem {
           });
         }
 
-        const stale = memories.filter(m =>
-          m.validationStatus === "VALIDATED" &&
+        const stale = memories.filter(m => 
+          m.validationStatus === "VALIDATED" && 
           m.revalidationConditions && m.revalidationConditions.length > 0
         );
         if (stale.length > 0) {
@@ -262,8 +262,8 @@ export class MemorySystem {
       for (const mem of memories) {
         if (!oldest || mem.timestamp < oldest) oldest = mem.timestamp;
         if (!newest || mem.timestamp > newest) newest = mem.timestamp;
-
-        stats.byValidationStatus[mem.validationStatus] =
+        
+        stats.byValidationStatus[mem.validationStatus] = 
           (stats.byValidationStatus[mem.validationStatus] || 0) + 1;
       }
     }

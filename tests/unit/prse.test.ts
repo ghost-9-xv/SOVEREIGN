@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  PRSEEngine,
-  PRSEConfig,
+import { 
+  PRSEEngine, 
+  PRSEConfig, 
   DEFAULT_PRSE_CONFIG,
   PRSEPhase,
   PRSEContext,
@@ -141,7 +141,7 @@ describe("PRSEEngine", () => {
     });
 
     const output = await engine.executePhase("UNDERSTAND");
-
+    
     expect(output.phase).toBe("UNDERSTAND");
     expect(output.artifacts).toBeDefined();
     expect(output.decisions).toBeDefined();
@@ -223,7 +223,7 @@ describe("PRSEEngine", () => {
     });
 
     await engine.executePhase("UNDERSTAND");
-
+    
     const summary = engine.getIterationSummary();
     expect(summary).toBeDefined();
     expect(summary?.iterationId).toBeDefined();
@@ -252,7 +252,7 @@ describe("PRSEEngine", () => {
 
     await engine.executePhase("UNDERSTAND");
     await engine.executePhase("DECONSTRUCT");
-
+    
     const report = engine.generateReport();
     expect(report).toContain("PRSE Session Report");
     expect(report).toContain("Test objective");
@@ -280,7 +280,7 @@ describe("PRSEEngine", () => {
 
     await engine.executePhase("UNDERSTAND");
     await engine.executePhase("DECONSTRUCT");
-
+    
     const patterns = engine.analyzePatterns();
     expect(Array.isArray(patterns)).toBe(true);
   });
@@ -313,11 +313,11 @@ describe("PRSE Acceptance Criteria", () => {
     });
 
     await engine.executePhase("UNDERSTAND");
-
+    
     const context = engine.getCurrentContext();
     expect(context).toBeDefined();
     expect(context?.iterationHistory.length).toBeGreaterThan(0);
-
+    
     const lastIteration = context!.iterationHistory[context!.iterationHistory.length - 1];
     expect(lastIteration.evaluations.length).toBeGreaterThan(0);
   });
@@ -342,11 +342,11 @@ describe("PRSE Acceptance Criteria", () => {
     });
 
     await engine.executePhase("UNDERSTAND");
-
+    
     const context = engine.getCurrentContext();
     const lastIteration = context!.iterationHistory[context!.iterationHistory.length - 1];
     const clarityEval = lastIteration.evaluations.find(e => e.reasoning.includes("Objective"));
-
+    
     expect(clarityEval).toBeDefined();
     expect(clarityEval?.satisfied).toBe(false);
   });
@@ -371,11 +371,11 @@ describe("PRSE Acceptance Criteria", () => {
     });
 
     await engine.executePhase("UNDERSTAND");
-
+    
     const context = engine.getCurrentContext();
     const lastIteration = context!.iterationHistory[context!.iterationHistory.length - 1];
     const constraintEval = lastIteration.evaluations.find(e => e.reasoning.includes("constraint"));
-
+    
     expect(constraintEval).toBeDefined();
     expect(constraintEval?.satisfied).toBe(false);
   });
@@ -384,7 +384,7 @@ describe("PRSE Acceptance Criteria", () => {
 describe("PRSE Integration with Sovereign", () => {
   it("should export PRSE from main index", async () => {
     const { PRSEEngine, DEFAULT_PRSE_CONFIG, PRSE_PHASES, EVALUATION_DIMENSIONS, calculateExcellence } = await import("../../src/index.js");
-
+    
     expect(PRSEEngine).toBeDefined();
     expect(DEFAULT_PRSE_CONFIG).toBeDefined();
     expect(PRSE_PHASES).toBeDefined();

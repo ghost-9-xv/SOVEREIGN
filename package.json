@@ -22,7 +22,7 @@
     "polymath"
   ],
   "author": "SOVEREIGN Project",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "zod": "^3.22.4"
   },
